@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>To My Favorite Person ♡</title>
+<style>
+*{box-sizing:border-box}
+:root{color-scheme:dark}
+body{margin:0;min-height:100vh;overflow:hidden;font-family:Arial,sans-serif;color:#fff5ff;background:#0c0723}
+#space{position:fixed;inset:0;width:100%;height:100%;z-index:0}
+main{position:relative;z-index:1;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.home{text-align:center;width:min(430px,100%);position:relative}
+h1{font-size:clamp(22px,6vw,29px);color:#ffd7f2;margin:12px 0}
+.subtitle{font-size:13px;color:#cdb9ff}
+.cat{font-size:66px;margin:22px 0 8px;filter:drop-shadow(0 0 18px #ff9bda)}
+.psst{color:#ffc3e1;margin:12px}
+h2{font-size:clamp(19px,5vw,24px);color:#ffafd9;margin:24px 0 10px}
+.tagline{font-size:13px;color:#dccdff}
+.decor{position:absolute;font-size:28px;color:#ffcaec;animation:twinkle 2s infinite alternate}
+.d1{left:8%;top:43%}.d2{right:8%;top:45%}.d3{left:12%;bottom:30%}.d4{right:12%;bottom:25%}
+.mailbox{border:0;display:block;margin:30px auto 18px;background:transparent;color:#73336f;cursor:pointer;padding:0;touch-action:manipulation}
+.box{width:135px;height:70px;border-radius:14px;background:#ff8cc8;border:8px solid #ffdff0;position:relative;display:grid;place-items:center;box-shadow:0 8px 30px #a84a9b55}
+.box:before{content:"";position:absolute;inset:0;background:#ffc6e3;clip-path:polygon(0 0,50% 58%,100% 0,100% 100%,0 100%);border-radius:6px}
+.box span{position:relative;font-size:25px;color:#ff3795}
+.stand{height:40px;width:12px;background:#b473d2;margin:auto;border-radius:0 0 5px 5px}
+.open-label{font-size:12px;margin-top:7px;color:#e6c7ff}
+.hint{color:#ffafd9;font-size:15px;margin:10px}
+footer{font-size:12px;color:#c6b5ef;line-height:1.8}
+.modal{position:fixed;inset:0;z-index:5;background:#050318e8;display:none;align-items:center;justify-content:center;padding:18px}
+.modal.show{display:flex}
+.letter{width:min(430px,100%);height:min(650px,90dvh);background:#ffe8f5;border:3px solid #ff8cc3;border-radius:20px;color:#5a375f;display:flex;flex-direction:column;padding:20px 22px 14px;box-shadow:0 0 45px #e88ac955}
+.letter h3{text-align:center;color:#c8418d;font-size:23px;margin:0 0 7px}
+.letter .sub{text-align:center;font-size:12px;color:#8c5a95;margin-bottom:16px}
+.rule{height:2px;background:#f0a5cd;flex-shrink:0}
+.content{overflow:auto;overscroll-behavior:contain;padding:12px 3px;line-height:1.65;font-size:15px;white-space:pre-line;flex:1}
+.content p{margin:0 0 16px}
+.bottom{text-align:center;font-size:12px;color:#965b91;padding-top:10px;line-height:1.8}
+.close{align-self:flex-end;border:0;background:#f9c6e0;color:#7c356d;border-radius:20px;padding:6px 12px;cursor:pointer;margin-bottom:8px}
+@keyframes twinkle{from{opacity:.45;transform:scale(.9)}to{opacity:1;transform:scale(1.1)}}
+@media(max-height:650px){.cat{font-size:48px;margin:8px}.mailbox{margin:16px auto 8px}.home h2{margin:12px 0}}
+</style>
+</head>
+<body>
+<canvas id="space"></canvas>
+<main>
+<section class="home">
+<div class="decor d1">✦</div><div class="decor d2">✧</div><div class="decor d3">⋆</div><div class="decor d4">✦</div>
+<h1>♡ MY UNIVERSE ♡</h1>
+<div class="subtitle">a little galaxy, a little love, all for you</div>
+<div class="cat" aria-label="kucing lucu">🐱</div>
+<div class="psst">pssst... someone loves you ♡</div>
+<h2>HEY, MY FAVORITE PERSON!</h2>
+<div class="tagline">you make my little universe brighter ✨</div>
+<button class="mailbox" id="open" aria-label="Buka surat cinta">
+<div class="box"><span>♥</span></div><div class="stand"></div><div class="open-label">OPEN ME ♡</div>
+</button>
+<div class="subtitle">there's a little letter waiting for you</div>
+<div class="hint">tap the mailbox to open it 💌</div>
+<footer>made with love, just for you<br>you are my favorite notification ♡</footer>
+</section>
+</main>
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="letterTitle">
+<article class="letter">
+<button class="close" id="close">✕ close</button>
+<h3 id="letterTitle">♡ FOR MY LOVE ♡</h3>
+<div class="sub">a letter written under the stars</div>
+<div class="rule"></div>
+<div class="content" id="letterContent"></div>
+<div class="rule"></div>
+<div class="bottom">scroll to read the whole letter ♡<br>tap outside the letter to close</div>
+</article>
+</div>
+<script>
+const canvas=document.getElementById('space'),ctx=canvas.getContext('2d');
+let w,h,stars=[],hearts=[],shooting=[];
+function resize(){w=canvas.width=innerWidth*devicePixelRatio;h=canvas.height=innerHeight*devicePixelRatio;canvas.style.width=innerWidth+'px';canvas.style.height=innerHeight+'px';ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);w=innerWidth;h=innerHeight;stars=Array.from({length:180},()=>({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.5+.4,p:Math.random()*6,s:Math.random()*1.5+.5}));}
+function draw(){ctx.clearRect(0,0,w,h);ctx.fillStyle='#0c0723';ctx.fillRect(0,0,w,h);
+let g=ctx.createRadialGradient(w*.5,h*.4,10,w*.5,h*.4,Math.max(w,h)*.8);g.addColorStop(0,'#281044');g.addColorStop(.55,'#130b32');g.addColorStop(1,'#08051c');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+const t=Date.now()/500;for(const s of stars){let b=120+120*Math.sin(t*s.s+s.p);ctx.fillStyle=`rgb(${b},${b},255)`;ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();}
+if(Math.random()<.025)shooting.push({x:Math.random()*w*.8,y:Math.random()*h*.5,life:0});
+shooting.forEach(s=>{ctx.strokeStyle='#ded7ff';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(s.x,s.y);ctx.lineTo(s.x-22,s.y+22);ctx.stroke();s.x+=4;s.y+=4;s.life++});shooting=shooting.filter(s=>s.life<18);
+if(Math.random()<.12)hearts.push({x:Math.random()*w,y:h+15,v:.5+Math.random(),size:7+Math.random()*10,a:Math.random()*.7+.3});
+hearts.forEach(a=>{ctx.globalAlpha=a.a;ctx.font=a.size*2+'px Arial';ctx.fillStyle=Math.random()>.5?'#ff83c5':'#c28cff';ctx.fillText('♥',a.x,a.y);a.y-=a.v});ctx.globalAlpha=1;hearts=hearts.filter(a=>a.y>-30);
+requestAnimationFrame(draw)}
+addEventListener('resize',resize);resize();draw();
+const paragraphs=[
+"halooo, sayanggggkuuu cintakuuu duniakuuu! ♡",
+"aku bikin ini khusus buat kamu, seseorang yang entah bagaimana caranya bisa bikin hari-hari aku jadi jauh lebih berwarna. mungkin buat orang lain ini cuma sebuah program sederhana, cuma layar dengan bintang-bintang dan warna ungu. tapi buat aku, ini salah satu cara kecil buat ngasih tahu kamu betapa berartinya kamu di hidup aku.",
+"sayang, makasih yaa udah hadir di hidup aku. makasih udah jadi seseorang yang bisa bikin aku senyum cuma gara-gara satu pesan singkat dari kamu. lucu banget ya, kadang hal sesederhana notifikasi dari kamu aja bisa bikin suasana hati aku berubah jadi lebih baik. kamu mungkin nggak selalu sadar tentang itu, tapi kehadiran kamu punya arti yang besar buat aku.",
+"aku nggak tahu masa depan bakal bawa kita ke mana. aku juga nggak bisa janji kalau hubungan kita bakal selalu mudah, kalau kita nggak akan pernah beda pendapat, atau kalau kita bakal selalu punya hari-hari yang indah. tapi satu hal yang aku harapin adalah semoga kita selalu punya alasan buat saling memahami, saling menghargai, dan saling memilih untuk memperbaiki keadaan ketika ada sesuatu yang nggak berjalan sesuai harapan.",
+"aku mau kamu tahu kalau kamu nggak harus selalu jadi orang yang kuat di depan aku. kamu boleh capek, boleh sedih, boleh cerita tentang hari yang buruk, boleh bilang kalau ada sesuatu yang mengganggu pikiran kamu. kamu nggak harus menyembunyikan semuanya hanya karena takut terlihat lemah. aku pengin kita bisa jadi dua orang yang saling mendengarkan, bukan dua orang yang harus selalu terlihat sempurna.",
+"kalau suatu hari kamu merasa dunia terlalu berisik, semoga kamu ingat kalau kamu tetap berharga. kalau kamu merasa usaha kamu belum cukup, semoga kamu ingat bahwa kamu juga pantas beristirahat. kalau kamu lagi meragukan diri sendiri, semoga kamu tetap bisa melihat banyak hal baik yang ada di dalam diri kamu. aku mungkin nggak selalu punya jawaban untuk semua masalah kamu, tapi aku mau berusaha mendengarkan dan memahami kamu sebaik yang aku bisa.",
+"maaf yaa kalau terkadang aku masih punya banyak kekurangan. mungkin ada waktu ketika kata-kata aku kurang tepat, ketika aku terlalu sibuk dengan pikiran sendiri, atau ketika aku belum bisa memahami apa yang sebenarnya kamu rasakan. aku juga masih belajar. aku pengen jadi pasangan yang lebih baik, bukan karena aku harus menjadi sempurna, tapi karena hubungan ini layak dijaga dengan usaha dari kita berdua.",
+"aku harap kita nggak cuma saling sayang ketika semuanya terasa menyenangkan. aku harap kita juga bisa belajar berkomunikasi ketika ada masalah, berani meminta maaf ketika salah, dan mau mendengarkan ketika salah satu dari kita sedang ingin dipahami. buat aku, cinta bukan cuma tentang kata-kata manis, tapi juga tentang rasa hormat, kejujuran, kepercayaan, dan usaha kecil yang dilakukan secara konsisten.",
+"kalau aku bisa menggambarkan kamu dengan sesuatu di langit, mungkin aku bakal memilih bintang. bukan karena bintang harus selalu bersinar paling terang, tapi karena keberadaannya membuat langit malam terasa berbeda. dan sama seperti itu, kamu nggak harus selalu melakukan sesuatu yang besar untuk punya arti. menjadi diri kamu sendiri aja udah cukup berharga.",
+"aku suka hal-hal kecil tentang kita. obrolan random yang nggak jelas, candaan receh yang kadang nggak lucu, cerita tentang kegiatan sehari-hari, sampai momen ketika kita cuma saling menanyakan kabar. mungkin semuanya terlihat sederhana, tapi justru hal-hal kecil seperti itu yang pengin aku hargai dan ingat.",
+"sayang, jangan lupa jaga diri kamu yaa. makan yang cukup, istirahat kalau capek, dan kasih waktu buat diri sendiri ketika kamu membutuhkannya. aku senang bisa jadi bagian dari hidup kamu, tapi aku juga ingin kamu tetap punya waktu untuk hal-hal yang kamu suka, impian kamu, teman-teman kamu, dan semua hal yang bikin kamu merasa menjadi diri sendiri.",
+"aku nggak mau kamu merasa harus selalu membuktikan sesuatu supaya pantas disayang. kamu nggak harus selalu membahagiakan aku, nggak harus selalu punya energi untuk menghibur aku, dan nggak harus mengorbankan semua kebutuhan kamu sendiri. aku pengin kita sama-sama bahagia, tumbuh, dan punya ruang untuk menjadi diri sendiri sambil tetap saling mendukung.",
+"kalau nanti kita punya banyak cerita baru, aku harap kita bisa mengenangnya dengan senyum. kalau nanti ada masa sulit, aku harap kita bisa menghadapinya dengan kepala dingin dan hati yang mau memahami. aku nggak tahu berapa banyak halaman yang masih akan kita tulis bersama, tapi aku ingin menghargai setiap halaman yang sedang kita jalani sekarang.",
+"dan satu lagi, terima kasih karena sudah menjadi kamu. terima kasih untuk perhatian kamu, waktu yang kamu luangkan, cerita yang kamu bagikan, dan semua hal kecil yang mungkin bahkan nggak kamu sadari sudah membuat aku bahagia. aku menghargai kamu lebih dari yang bisa aku jelaskan lewat satu surat.",
+"aku sayang kamu, bukan cuma saat kamu sedang tersenyum, bukan cuma saat semuanya berjalan baik, dan bukan cuma saat kita punya banyak hal untuk dibicarakan. aku ingin terus belajar menyayangi kamu dengan cara yang sehat, tulus, dan penuh rasa hormat.",
+"semoga hari-hari kamu dipenuhi hal-hal baik. semoga mimpi-mimpi kamu perlahan menemukan jalannya. semoga kamu selalu menemukan alasan untuk tersenyum, bahkan di hari yang terasa biasa saja. dan semoga di antara luasnya galaksi ini, kamu nggak pernah lupa kalau keberadaan kamu berarti.",
+"last but not least, kalau kamu lagi baca surat ini sampai akhir, aku cuma mau bilang satu hal lagi...",
+"I'M SO LUCKY TO HAVE YOU IN MY LIFE. ♡",
+"with all my love,",
+"your favorite person. 💗"
+];
+const content=document.getElementById('letterContent');paragraphs.forEach(p=>{const el=document.createElement('p');el.textContent=p;content.appendChild(el)});
+const modal=document.getElementById('modal');
+document.getElementById('open').addEventListener('click',()=>{modal.classList.add('show');content.scrollTop=0});
+document.getElementById('close').addEventListener('click',()=>modal.classList.remove('show'));
+modal.addEventListener('click',e=>{if(e.target===modal)modal.classList.remove('show')});
+addEventListener('keydown',e=>{if(e.key==='Escape')modal.classList.remove('show')});
+</script>
+</body>
+</html>
